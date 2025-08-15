@@ -26,6 +26,20 @@ impl Chip8 {  // Behavior implementation
         }
     }
 
+    pub fn mem_write(&mut self, addr: u16, value: u8) {
+        self.mem[addr as usize] = value;
+    }
+    pub fn mem_read(&mut self, addr: u16) -> u8 {
+        self.mem[addr as usize]
+    }
+
+    pub fn stack_push(&mut self, value: u16) {
+        self.stack.push(value);
+    }
+    pub fn stack_pop(&mut self) -> u16 {
+        self.stack.pop().unwrap_or_else(|| panic!("Stack underflow"))
+    }
+
     pub fn set_pc(&mut self, addr: u16) {
         self.pc = addr;
     }
@@ -49,10 +63,18 @@ impl Chip8 {  // Behavior implementation
         self.v[index]
     }
 
-    pub fn stack_push(&mut self, value: u16) {
-        self.stack.push(value);
+    pub fn d_timer_set(&mut self, value: u8) {
+        self.d_timer = value;
     }
-    pub fn stack_pop(&mut self) -> Option<u16> {
-        self.stack.pop()
+    pub fn d_timer_get(&self) -> u8 {
+        self.d_timer
     }
+    pub fn s_timer_set(&mut self, value: u8) {
+        self.s_timer = value;
+    }
+    pub fn s_timer_get(&self) -> u8 {
+        self.s_timer
+    }
+
+    
 }

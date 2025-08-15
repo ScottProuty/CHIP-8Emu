@@ -4,9 +4,7 @@
 #[allow(unused_assignments)]
 #[allow(unused_imports)]
 
-mod chip8;
-mod tests;
-use chip8::Chip8;
+use chip8emu::Chip8;
 
 fn main() {
     let chip8 = Chip8::new();
