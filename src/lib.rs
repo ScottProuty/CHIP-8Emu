@@ -100,5 +100,34 @@ impl Chip8 {  // Behavior implementation
         self.s_timer
     }
 
+    fn fetch (&mut self) -> u16 { // Fetch next opcode (2 bytes) from mem at PC
+        let high_byte = self.mem[self.pc as usize] as u16;
+        let low_byte = self.mem[(self.pc + 1) as usize] as u16;
+        let opcode = (high_byte << 8) | low_byte;
+        self.pc += 2;
+        opcode
+    }
+
+    fn execute (&mut self, opcode: u16) {
+        match opcode & 0xF000 { // first byte of opcode
+            0x0 => {} // clear screen
+            0x1 => {} // jump unconditional
+            0x2 => {}
+            0x3 => {}
+            0x4 => {}
+            0x5 => {}
+            0x6 => {}
+            0x7 => {}
+            0x8 => {}
+            0x9 => {}
+            0xA => {}
+            0xB => {}
+            0xC => {}
+            0xD => {}
+            0xE => {}
+            0xF => {}
+            _ => {println!("Unknown opcode: {:04X}", opcode);}
+        }
+    }
     
 }
