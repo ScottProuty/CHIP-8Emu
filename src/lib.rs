@@ -15,15 +15,39 @@ pub struct Chip8 { // definition of CHIP-8
 
 impl Chip8 {  // Behavior implementation
     pub fn new() -> Self { // this fn returns "Chip8", which is "Self" in this case
-        Self { // This "Self" is a constructor shorthand
+        let mut chip8 = Chip8 { // constructor
             mem: [0; 4096],
-            stack: Vec::new(),
+            stack: Vec::with_capacity(16),
             pc: 0x200,
             i: 0x200,
             v: [0; 16],
             d_timer: 0,
             s_timer: 0,
-        }
+        };
+
+        const FONT: [u8;80] = [ // fontset - 16 chars, each 5 bytes
+            0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+            0x20, 0x60, 0x20, 0x20, 0x70, // 1
+            0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+            0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+            0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+            0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+            0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+            0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+            0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+            0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+            0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+            0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+            0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+            0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+            0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+            0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+        ];
+        
+        // Fills mem 0x50 -> 0x99 (inclusive) with FONT data
+        chip8.mem[0x50..0x50 + FONT.len()].copy_from_slice(&FONT); 
+
+        chip8
     }
 
     pub fn mem_write(&mut self, addr: u16, value: u8) {
@@ -37,7 +61,7 @@ impl Chip8 {  // Behavior implementation
         self.stack.push(value);
     }
     pub fn stack_pop(&mut self) -> u16 {
-        self.stack.pop().unwrap_or_else(|| panic!("Stack underflow"))
+        self.stack.pop().unwrap_or_else(|| panic!("Stack underflow - nothing to pop"))
     }
 
     pub fn set_pc(&mut self, addr: u16) {

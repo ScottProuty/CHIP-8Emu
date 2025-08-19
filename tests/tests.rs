@@ -65,4 +65,12 @@ fn test_timers_decrement_to_zero() {
     assert_eq!(dtime, 0x50); // will both be 0 once decrements implemented
     assert_eq!(stime, 0x45);
 }
+
+#[test]
+fn test_font_exists() {
+    let mut chip8 = Chip8::new();
+    assert_eq!(chip8.mem_read(0x50), 0xF0); // first font byte
+    assert_eq!(chip8.mem_read(0x6A), 0x80);
+    assert_eq!(chip8.mem_read(0x9F), 0x80); // last font byte
+}
     
