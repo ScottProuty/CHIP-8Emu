@@ -55,7 +55,7 @@ fn test_mem_write_read() {
 }
 
 #[test]
-fn test_timers_decrement_to_zero() {
+fn test_timers_hold_value() {
     let mut chip8 = Chip8::new();
     chip8.d_timer_set(0x50); // arbitrary value < 60
     chip8.s_timer_set(0x45);
@@ -73,4 +73,17 @@ fn test_font_exists() {
     assert_eq!(chip8.mem_read(0x6A), 0x80);
     assert_eq!(chip8.mem_read(0x9F), 0x80); // last font byte
 }
+
+#[test]
+fn print_display_buffer(){
+     let chip8 = Chip8::new();
+    // for row in chip8.display() {
+    //     for &pixel in row {
+    //         print!("{}", if pixel { "█" } else { " " });
+    //     }
+    //     println!();
+    // }
+    chip8.display_dump();
+}
+
     

@@ -5,6 +5,7 @@
 
 pub struct Chip8 { // definition of CHIP-8
     mem: [u8; 4096],
+    display: [[bool; 64]; 32], // 64x32 bool array
     stack: Vec<u16>,
     pc: u16,
     i: u16,
@@ -17,6 +18,7 @@ impl Chip8 {  // Behavior implementation
     pub fn new() -> Self { // this fn returns "Chip8", which is "Self" in this case
         let mut chip8 = Chip8 { // constructor
             mem: [0; 4096],
+            display: [[false; 64]; 32],
             stack: Vec::with_capacity(16),
             pc: 0x200,
             i: 0x200,
@@ -55,6 +57,21 @@ impl Chip8 {  // Behavior implementation
     }
     pub fn mem_read(&mut self, addr: u16) -> u8 {
         self.mem[addr as usize]
+    }
+
+    pub fn get_display(&self) -> &[[bool; 64]; 32] {
+        &self.display
+    }
+    pub fn display_dump(&self) {
+        for row in self.get_display() {
+            for &pixel in row {
+                print!("{}", if pixel { "█" } else { " " });
+            }
+            println!();
+        }
+    }
+    pub fn clear_display(&mut self) {
+        self.display = [[false; 64]; 32];
     }
 
     pub fn stack_push(&mut self, value: u16) {
@@ -110,7 +127,17 @@ impl Chip8 {  // Behavior implementation
 
     fn execute (&mut self, opcode: u16) {
         match opcode & 0xF000 { // first byte of opcode
-            0x0 => {} // clear screen
+            0x0 => {
+                match opcode {
+                    0x00E0 => { // clear screen
+                        self.clear_display();
+                    }
+                    0x00EE => { // return from subroutine
+
+                    }
+                } 
+                
+            } 
             0x1 => {} // jump unconditional
             0x2 => {}
             0x3 => {}
