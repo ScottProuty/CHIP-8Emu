@@ -117,6 +117,10 @@ impl Chip8 {  // Behavior implementation
         self.s_timer
     }
 
+    pub fn return_from_subroutine(&mut self) {
+        // what does this do
+    }
+
     // helper functions for extracting nibbles:
     // Extract first nibble (highest 4 bits of opcode)
     pub fn opcode_nibble(&self, opcode: u16) -> u16 {
@@ -151,7 +155,7 @@ impl Chip8 {  // Behavior implementation
         opcode
     }
 
-    fn execute (&mut self, opcode: u16) {
+    pub fn execute (&mut self, opcode: u16) {
         match opcode & 0xF000 { // first byte of opcode
             0x0000 => {
                 match opcode {
@@ -162,7 +166,7 @@ impl Chip8 {  // Behavior implementation
                         self.return_from_subroutine();
                     }
                     _ => {
-                        panic!("Unknown 0x0NNN opcode: {:#X", opcode);
+                        panic!("Unknown 0x0NNN opcode: {:#X}", opcode);
                     }
                 } 
                 
@@ -178,8 +182,7 @@ impl Chip8 {  // Behavior implementation
             0x4000 => {}
             0x5000 => {}
             0x6000 => {
-                self.v[opcode_x(opcode)] = opcode_nn(opcode);
-
+                self.v[self.opcode_x(opcode)] = self.opcode_nn(opcode);
             }
             0x7000 => {}
             0x8000 => {}

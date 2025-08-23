@@ -83,12 +83,20 @@ fn print_display_buffer(){
 #[test]
 fn test_opcode_helper_fns(){
     let mut chip8 = Chip8::new();
-    assert_eq!(chip8.opcode_nibble(0xABCD), 0xA)
-    assert_eq!(chip8.opcode_x(0xABCD), 0xB)
-    assert_eq!(chip8.opcode_y(0xABCD), 0xC)
-    assert_eq!(chip8.opcode_n(0xABCD), 0xD)
-    assert_eq!(chip8.opcode_nn(0xABCD), 0xCD)
-    assert_eq!(chip8.opcode_nnn(0xABCD), 0xBCD)
+    assert_eq!(chip8.opcode_nibble(0xABCD), 0xA);
+    assert_eq!(chip8.opcode_x(0xABCD), 0xB);
+    assert_eq!(chip8.opcode_y(0xABCD), 0xC);
+    assert_eq!(chip8.opcode_n(0xABCD), 0xD);
+    assert_eq!(chip8.opcode_nn(0xABCD), 0xCD);
+    assert_eq!(chip8.opcode_nnn(0xABCD), 0xBCD);
 }
 
+#[test]
+fn test_unconditional_jump(){
+    let mut chip8 = Chip8::new();
+    let original_pc: u16 = chip8.get_pc();
+    if original_pc == 0x123 { chip8.set_pc(0x200) };
+    chip8.execute(0x1123);
+    assert_eq!(chip8.get_pc(), 0x123);
+}
     
