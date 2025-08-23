@@ -76,14 +76,19 @@ fn test_font_exists() {
 
 #[test]
 fn print_display_buffer(){
-     let chip8 = Chip8::new();
-    // for row in chip8.display() {
-    //     for &pixel in row {
-    //         print!("{}", if pixel { "█" } else { " " });
-    //     }
-    //     println!();
-    // }
+    let chip8 = Chip8::new();
     chip8.display_dump();
+}
+
+#[test]
+fn test_opcode_helper_fns(){
+    let mut chip8 = Chip8::new();
+    assert_eq!(chip8.opcode_nibble(0xABCD), 0xA)
+    assert_eq!(chip8.opcode_x(0xABCD), 0xB)
+    assert_eq!(chip8.opcode_y(0xABCD), 0xC)
+    assert_eq!(chip8.opcode_n(0xABCD), 0xD)
+    assert_eq!(chip8.opcode_nn(0xABCD), 0xCD)
+    assert_eq!(chip8.opcode_nnn(0xABCD), 0xBCD)
 }
 
     

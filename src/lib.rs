@@ -117,6 +117,32 @@ impl Chip8 {  // Behavior implementation
         self.s_timer
     }
 
+    // helper functions for extracting nibbles:
+    // Extract first nibble (highest 4 bits of opcode)
+    pub fn opcode_nibble(&self, opcode: u16) -> u16 {
+        (opcode & 0xF000) >> 12
+    }
+    // Extract second nibble (X register index)
+    pub fn opcode_x(&self, opcode: u16) -> usize {
+        ((opcode & 0x0F00) >> 8) as usize
+    }
+    // Extract third nibble (Y register index)
+    pub fn opcode_y(&self, opcode: u16) -> usize {
+        ((opcode & 0x00F0) >> 4) as usize
+    }
+    // Extract fourth nibble (lowest 4 bits)
+    pub fn opcode_n(&self, opcode: u16) -> u8 {
+        ((opcode & 0x000F)) as u8
+    }
+    // Extract lowest byte (NN)
+    pub fn opcode_nn(&self, opcode: u16) -> u8 {
+        ((opcode & 0x00FF)) as u8
+    }
+    // Extract lowest 12 bits (NNN)
+    pub fn opcode_nnn(&self, opcode: u16) -> u16 {
+        ((opcode & 0x0FFF)) as u16
+    }
+
     fn fetch (&mut self) -> u16 { // Fetch next opcode (2 bytes) from mem at PC
         let high_byte = self.mem[self.pc as usize] as u16;
         let low_byte = self.mem[(self.pc + 1) as usize] as u16;
@@ -127,32 +153,43 @@ impl Chip8 {  // Behavior implementation
 
     fn execute (&mut self, opcode: u16) {
         match opcode & 0xF000 { // first byte of opcode
-            0x0 => {
+            0x0000 => {
                 match opcode {
                     0x00E0 => { // clear screen
                         self.clear_display();
                     }
                     0x00EE => { // return from subroutine
-
+                        self.return_from_subroutine();
+                    }
+                    _ => {
+                        panic!("Unknown 0x0NNN opcode: {:#X", opcode);
                     }
                 } 
                 
             } 
-            0x1 => {} // jump unconditional
-            0x2 => {}
-            0x3 => {}
-            0x4 => {}
-            0x5 => {}
-            0x6 => {}
-            0x7 => {}
-            0x8 => {}
-            0x9 => {}
-            0xA => {}
-            0xB => {}
-            0xC => {}
-            0xD => {}
-            0xE => {}
-            0xF => {}
+            0x1000 => { // 0x1NNN: jump to address NNN
+                let addr = opcode & 0x0FFF;
+                self.pc = addr;
+            } 
+            0x2000 => {
+
+            }
+            0x3000 => {}
+            0x4000 => {}
+            0x5000 => {}
+            0x6000 => {
+                self.v[opcode_x(opcode)] = opcode_nn(opcode);
+
+            }
+            0x7000 => {}
+            0x8000 => {}
+            0x9000 => {}
+            0xA000 => {}
+            0xB000 => {}
+            0xC000 => {}
+            0xD000 => {}
+            0xE000 => {}
+            0xF000 => {}
             _ => {println!("Unknown opcode: {:04X}", opcode);}
         }
     }
